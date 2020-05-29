@@ -272,6 +272,9 @@ export default class UserSettings extends Component {
                             </TouchableOpacity>
                         </View>
                     </ScrollView>
+                    <TouchableOpacity activeOpacity={0.5} onPress={()=> this.props.logout()} style={styles.buttontbox5}>
+                        <Text style={styles.buttontboxtext3}>LOGOUT</Text>
+                    </TouchableOpacity>
                     <TouchableOpacity activeOpacity={0.5} onPress={()=> this.delete_account()} style={styles.buttontbox4}>
                         <Text style={styles.buttontboxtext3}>DELETE ACCOUNT</Text>
                     </TouchableOpacity>
@@ -453,6 +456,15 @@ const styles = StyleSheet.create({
     buttontbox4:
     {
         backgroundColor:'#7C0A02',
+        alignItems:'center',
+        justifyContent:'center',
+        padding:8,
+        borderRadius:5,
+        margin:5
+    },
+    buttontbox5:
+    {
+        backgroundColor:'darkyellow',
         alignItems:'center',
         justifyContent:'center',
         padding:8,
