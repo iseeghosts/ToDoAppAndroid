@@ -434,6 +434,7 @@ const styles = StyleSheet.create({
         padding:8,
         borderBottomLeftRadius:5,
         borderBottomRightRadius:5,
+        elevation:5,
     },
     buttontbox2:
     {
@@ -443,6 +444,7 @@ const styles = StyleSheet.create({
         padding:8,
         borderBottomLeftRadius:5,
         borderBottomRightRadius:5,
+        elevation:5,
     },
     buttontbox3:
     {
@@ -451,6 +453,7 @@ const styles = StyleSheet.create({
         justifyContent:'center',
         padding:8,
         borderRadius:5,
+        elevation:5,
     },
     buttontbox4:
     {
@@ -459,16 +462,18 @@ const styles = StyleSheet.create({
         justifyContent:'center',
         padding:8,
         borderRadius:5,
-        margin:5
+        margin:5,
+        elevation:5,
     },
-    buttontbox4:
+    buttontbox5:
     {
         backgroundColor:'darkyellow',
         alignItems:'center',
         justifyContent:'center',
         padding:8,
         borderRadius:5,
-        margin:5
+        margin:5,
+        elevation:5,
     },
     buttontboxtext:{
         color:'white',
