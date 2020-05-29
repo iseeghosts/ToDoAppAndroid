@@ -14,6 +14,7 @@ import Hide_Pass from './assets/Hide_Pass.png';
 import Back_Arrow from './assets/Back_Arrow.png'
 var messages = ["Sorry, this user id is not available","Kindly fill all the fields", "this userid is available", "Passwords do not match!"];
 var ms = Dimensions.get('window')
+import UO from './originaluserlist.json'
 var x;
 
 export default class SignUp extends Component {
@@ -47,7 +48,7 @@ export default class SignUp extends Component {
         check_availability = () => {
             var len1=0
             var len2=0
-            for (x in this.props.vo) {
+            for (x in UO) {
                 if ([x]!=this.state.userid) {
                     len1=len1+1
                 }
@@ -102,11 +103,12 @@ export default class SignUp extends Component {
             if ((this.state.password) && (this.state.password2) && (this.state.name)) {
                 if (this.state.password==this.state.password2) {
                     this.props.Users[this.state.userid] = {"name":this.state.name, "pwd":this.state.password, "taskMargin":8, "theme":"light"}
-                    this.props.vo[this.state.userid] = {"name":this.state.name, "pwd":this.state.password, "taskMargin":8, "theme":"light"}
-                    Alert.alert("Account Creation",'Hi '+ this.props.Users[this.state.userid].name + '\nYour Account was created successfully!'
+                    UO[this.state.userid] = {"name":this.state.name, "pwd":this.state.password, "taskMargin":8, "theme":"light"}
+                    this.props.Tasks[this.state.userid] = [];
+                    Alert.alert("Account Creation",'Hi '+ this.props.Users[this.state.userid].name + '!\nYour account was created successfully!'
                     ,[
                         {text:'Ok!', onPress: () => this.setState({ name:'', userid:'', password:'', password2:'', displaySignUpBox:'none', enablePass1:true, enablePass2:true, showPass1:true, showPass2:true, result:'', result2:'', User_Status:Userid_Check, Pass_View1:Hide_Pass, Pass_View2:Hide_Pass})},
-                        {text:'Go to home', onPress: () => { this.props.Tasks[this.state.userid] = [];  this.props.setUserId(this.state.userid); this.props.signUp(false); this.props.goHome(true);}}
+                        {text:'Go to home', onPress: () => {this.props.setUserId(this.state.userid); this.props.signUp(false); this.props.goHome(true);}}
                     ], {cancelable:true} )
                 } else {
                 this.setState({result2:messages[3]})
@@ -154,9 +156,9 @@ export default class SignUp extends Component {
                             <Text style={styles.useridtext}>enter a userid to signup with...</Text>
                             <View style={styles.useridbox}>
                                 <TextInput style={styles.inputuserid}  defaultValue={this.state.userid} placeholderTextColor='darkgrey' placeholder={'userid'} onChangeText={(userid)=>this.setState({userid})} onChange={() => this.reset_fields()} />
-                                <TouchableHighlight style={styles.useridverify} onPress={()=>this.check_availability()} underlayColor='steelblue' disabled={(this.state.userid=='')} placeholder={'input preferred useid'}>
+                                <TouchableOpacity  style={styles.useridverify} onPress={()=>this.check_availability()} activeOpacity={1} disabled={(this.state.userid=='')}>
                                     <Image source={this.state.User_Status} style={styles.thumb}/>                           
-                                </TouchableHighlight>
+                                </TouchableOpacity>
                             </View>
                             <Text style={resulttext}>{this.state.result}</Text>
                             <View style={signupbox}>
@@ -312,11 +314,9 @@ const styles = StyleSheet.create({
 
     //button for userid verification
     useridverify:{
-        marginVertical:2.5,
-        marginHorizontal: 5,   
-        height:35,
-        width:35,
-        borderRadius:17.5,
+        width:45,
+        alignItems:'center',
+        justifyContent:'center'   
     },
 
     //style for userdetails

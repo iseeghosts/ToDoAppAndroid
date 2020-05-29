@@ -64,7 +64,7 @@ export default class UserHome extends Component{
         if (this.props.user.theme=='dark') {
             return(
                 <View style={{flex:1}}>
-                    <UserHomeDark Tasks={this.props.Tasks} logout={this.props.logout} v={this.props.v} user={this.props.user} id={this.props.id} />
+                    <UserHomeDark deleted={this.props.deleted} Tasks={this.props.Tasks} logout={this.props.logout} v={this.props.v} user={this.props.user} id={this.props.id} />
                 </View>
             )
         }
@@ -72,7 +72,7 @@ export default class UserHome extends Component{
             // alert(this.props.user.theme)
             return (
               <View style={{flex:1}}>
-                <UserSettings logout={this.props.logout} user={this.props.user}  v={this.props.v} id={this.props.id} closeSettings={this.user_settings} />
+                <UserSettings deleted={this.props.deleted} logout={this.props.logout} user={this.props.user}  v={this.props.v} id={this.props.id} closeSettings={this.user_settings} />
               </View>
             )
           }

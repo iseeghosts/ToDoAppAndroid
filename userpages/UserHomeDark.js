@@ -61,7 +61,7 @@ var ms = Dimensions.get('window');
         if (this.props.user.theme=='light') {
             return(
                 <View style={{flex:1}}>
-                    <UserHomeLight Tasks={this.props.Tasks} v={this.props.v} logout={this.props.logout} user={this.props.user} id={this.props.id} />
+                    <UserHomeLight deleted={this.props.deleted} Tasks={this.props.Tasks} v={this.props.v} logout={this.props.logout} user={this.props.user} id={this.props.id} />
                 </View>
             )
         }
@@ -70,7 +70,7 @@ var ms = Dimensions.get('window');
             // alert(this.props.user.taskMargin)
             return (
               <View style={{flex:1}}>
-                <UserSettings  v={this.props.v} logout={this.props.logout} id={this.props.id} user={this.props.user} closeSettings={this.user_settings} />
+                <UserSettings deleted={this.props.deleted}  v={this.props.v} logout={this.props.logout} id={this.props.id} user={this.props.user} closeSettings={this.user_settings} />
               </View>
             )
           }

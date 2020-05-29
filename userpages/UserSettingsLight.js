@@ -27,6 +27,9 @@ export default class UserSettings extends Component {
             Pass_View1:Hide_Pass,
             Pass_View2:Hide_Pass,
             Pass_View3:Hide_Pass,
+            verifypassword:'',
+            displaydelete:'none',
+            Pass_View:Hide_Pass,
         })
     }
 
@@ -143,15 +146,23 @@ export default class UserSettings extends Component {
         })
         alert('Dark theme applied successfully!')
     }
+    display_delete = () => {
+        this.setState({
+            verifypassword:'',
+            displaydelete:(this.state.displaydelete=='none'?'flex':'none')
+        })
+    }
 
     delete_account = () => {
         var id = this.props.id
+        if (this.state.verifypassword==this.props.user.pwd)
         Alert.alert('Delete Account', "This action is irreversible,\n Do you still want to proceed?", [{text:'Yes', onPress: () => {
-        this.props.logout();
-        alert('Account Deleted Successfully!')
-        delete this.props.v[id];
+            this.props.deleted();
+            alert('Account Deleted Successfully!')
+            delete this.props.v[id];
         }
     }, {text:'No',}], {cancelable:true} )
+    else alert('Incorrect Password!')
     }
 
     
@@ -161,10 +172,15 @@ export default class UserSettings extends Component {
                 display:this.state.pfv
             }
         ])
+        var deleteaccount = StyleSheet.flatten([
+            styles.accontdeletion,{
+                display:this.state.displaydelete,
+            }
+        ])
         if (this.props.user.theme=='dark') {
             return (
                 <View style={{flex:1}}>
-                  <UserSettingsDark id={this.props.id} logout={this.props.logout} v={this.props.v} user={this.props.user}  closeSettings={this.props.closeSettings} />
+                  <UserSettingsDark deleted={this.props.deleted} id={this.props.id} logout={this.props.logout} v={this.props.v} user={this.props.user}  closeSettings={this.props.closeSettings} />
                 </View>
               )
         }
@@ -196,9 +212,6 @@ export default class UserSettings extends Component {
                             </TouchableOpacity>
                         </View>
 
-                        {/* <TouchableOpacity activeOpacity={0.7} style={styles.passwordexpand} onPress={() => this.update_password()}>
-                            <Text style={styles.passwordupdatebuttontext}>Update Password</Text>
-                        </TouchableOpacity> */}
                         <View style={passboxcontainer}>
                             {/* passwords */}
                             <View style={styles.boxofall}>
@@ -275,9 +288,23 @@ export default class UserSettings extends Component {
                     <TouchableOpacity activeOpacity={0.5} onPress={()=> this.props.logout()} style={styles.buttontbox5}>
                         <Text style={styles.buttontboxtext3}>LOGOUT</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity activeOpacity={0.5} onPress={()=> this.delete_account()} style={styles.buttontbox4}>
-                        <Text style={styles.buttontboxtext3}>DELETE ACCOUNT</Text>
-                    </TouchableOpacity>
+                    <View style={styles.themes}>
+                        <TouchableOpacity activeOpacity={0.5} onPress={()=> this.display_delete()} style={styles.buttontbox6}>
+                            <Text style={styles.buttontboxtext}>Request Account Deletion</Text>
+                        </TouchableOpacity>
+                    </View>
+                    <View style={deleteaccount}>
+                        <Text style={styles.deletiontext}>Please verify your password!</Text>
+                        <View style={styles.passbox2}>
+                            <TextInput style={styles.textinputpass2} secureTextEntry={this.state.Pass_View==Hide_Pass} placeholder={''} defaultValue={this.state.verifypassword} onChangeText={(verifypassword) => this.setState({verifypassword})} />
+                            <TouchableOpacity activeOpacity={1} style={styles.passwordview} onPress={()=> this.setState({Pass_View:(this.state.Pass_View==Hide_Pass ? Show_Pass:Hide_Pass)})}>
+                                <Image style={styles.buttonthumbs} source={this.state.Pass_View} />
+                            </TouchableOpacity>
+                        </View>                                
+                        <TouchableOpacity disabled={this.state.verifypassword==''} activeOpacity={0.5} onPress={()=> this.delete_account()} style={styles.buttontbox4}>
+                            <Text style={styles.buttontboxtext3}>DELETE ACCOUNT</Text>
+                        </TouchableOpacity>
+                    </View>
                 </KeyboardAvoidingView>
             </View>
         )
@@ -383,12 +410,31 @@ const styles = StyleSheet.create({
         elevation:5,
         flexDirection:'row',
     },
+    passbox2:
+    {
+        marginHorizontal:5,
+        paddingLeft:10,
+        borderRadius:3,
+        backgroundColor:'white',
+        alignContent:'center',
+        justifyContent:'center',
+        width:ms.width-20,
+        elevation:5,
+        flexDirection:'row',
+    },
     textinputpass:
     {
         paddingVertical:3,
         color:'black',
         fontSize:18,
-        width:ms.width*7/9-55,
+        width:ms.width*7/9-65,
+    },
+    textinputpass2:
+    {
+        paddingVertical:3,
+        color:'black',
+        fontSize:18,
+        width:ms.width-85,
     },
     passwordview:{
         justifyContent:"center",
@@ -402,7 +448,7 @@ const styles = StyleSheet.create({
         color:'red',
         fontSize:12,
         padding:2,
-        textAlign:'justify'
+        textAlign:'center'
     },
     margbox:{
         flexDirection:'row',
@@ -464,20 +510,31 @@ const styles = StyleSheet.create({
         padding:8,
         borderRadius:5,
         margin:5,
+        marginTop:10,
         elevation:5,
     },
     buttontbox5:
     {
-        backgroundColor:'darkyellow',
+        backgroundColor:'#daa520',
         alignItems:'center',
         justifyContent:'center',
         padding:8,
         borderRadius:5,
         margin:5,
+        marginTop:0,
+        elevation:5,
+    },
+    buttontbox6:
+    {
+        backgroundColor:'#660000',
+        alignItems:'center',
+        justifyContent:'center',
+        padding:8,
+        borderRadius:5,
         elevation:5,
     },
     buttontboxtext:{
-        color:'black',
+        color:'white',
         fontSize:18,
     },
     buttontboxtext2:
@@ -490,4 +547,15 @@ const styles = StyleSheet.create({
         color:'white',
         fontSize:18,
     },
+    accontdeletion:
+    {
+        backgroundColor:'#cd5c5c',
+        margin:5,
+        borderRadius:5,
+    },
+    deletiontext: {
+        textAlign:'center',
+        padding:4,
+        fontSize:15,
+    }
 })

@@ -4,7 +4,7 @@
 
 /* importing required modules */
 import React, {useState} from 'react';
-import { Text, View, TextInput, Platform, Image, KeyboardAvoidingView, Dimensions, TouchableOpacity, TouchableHighlight, StyleSheet, YellowBox } from 'react-native';
+import { Text, View, TextInput, Platform, Image, KeyboardAvoidingView, Dimensions, TouchableOpacity, TouchableHighlight, StyleSheet, YellowBox, Alert } from 'react-native';
 YellowBox.ignoreWarnings(['RootErrorBoundary']);
 YellowBox.ignoreWarnings(['Require cycle'])
 
@@ -23,8 +23,6 @@ import SignUp from './SignUp';
 /* Importing list of users*/
 import Users from './users.json'
 import Tasks from './tasks.json'
-var UO = Users
-
 /*Main Function */
 export default function UserLogin() {
 
@@ -41,7 +39,6 @@ export default function UserLogin() {
     let [useridCheckResult, setUseridCheckResult] = useState(Userid_Check);    // Image URI source for userid check
     let [disableUserid, setDisableUserid] = useState(false);     //disables userid input if counter exceeds
     let [useridCheck, setUseridCheck] = useState(true);    // Checks if Userid is registered or not
-    let [passwordView, setPasswordView] = useState(false);    //set whether to show the password
     let [passBoxVisibility, setPassBoxVisibility] = useState('none');    //enables password box in case userid is registered
     let [registeredUserid, setRegisteredUserid] = useState('none');     //Enables visibility of login messages if needed.
     let [viewPassword, setViewPassword] = useState(Hide_Pass);     // Image URI source for Password View
@@ -115,7 +112,7 @@ export default function UserLogin() {
 if (signUp) {
     return (
         <View style={{flex:1}}>
-            <SignUp Tasks={Tasks} Users={Users} vo={VO} goHome={setGoHome} setUserId={setUserId} signUp={setSignUp} />
+            <SignUp Tasks={Tasks} Users={Users} goHome={setGoHome} setUserId={setUserId} signUp={setSignUp} />
         </View>
     )
 }
@@ -127,12 +124,12 @@ if (goHome) {
     if (Users[userid].theme=='light') {
         return(
             <View style={{flex:1}}>
-                <UserHomeLight Tasks={Tasks} v={Users} logout={reset_fields} user={Users[userid]} id={userid}/>
+                <UserHomeLight deleted={reset_defaults} Tasks={Tasks} v={Users} logout={log_out} user={Users[userid]} id={userid}/>
             </View>
         )    } else {
             return(
                 <View style={{flex:1}}>
-                    <UserHomeDark Tasks={Tasks} v={Users} logout={reset_fields} user={Users[userid]} id={userid}/>
+                    <UserHomeDark deleted={reset_defaults} Tasks={Tasks} v={Users} logout={log_out} user={Users[userid]} id={userid}/>
                 </View>
             )    
         }
@@ -141,11 +138,9 @@ if (goHome) {
 
 /* Password visibility setting */
     function password_visibility() {
-        if (passwordView) {
-            setPasswordView(false);
+        if (viewPassword!=Hide_Pass) {
             setViewPassword(Hide_Pass);
         } else {
-            setPasswordView(true);
             setViewPassword(Show_Pass);
         }
     }
@@ -153,13 +148,33 @@ if (goHome) {
 /* reset passoword fields and hide password box (Invoked when userid is changed)*/    
     function reset_fields() {
         setPasswordEntered('');
-        // pass.clear();
         setPassBoxVisibility('none');
         setUseridCheckResult(Userid_Check);
         setUseridCheck(true);
         setResult('');
         setGoHome(false);
+        setViewPassword(Hide_Pass);
     }
+
+    //default reset
+    function reset_defaults() {
+            setGoHome(false);
+            setUseridEntered('');
+            setPasswordEntered('');
+            setPassBoxVisibility('none');
+            setUseridCheckResult(Userid_Check);
+            setUseridCheck(true);
+            setResult('');
+            setViewPassword(Hide_Pass);
+    }
+
+    //logout
+    function log_out() {
+            Alert.alert('logout?', 'Are you sure you want to logout?', [
+                {text:'logout', onPress:reset_defaults},
+                {text:'No'}],
+                {cancelable:true} )
+            }
 
 /*Main Return function */    
     return (
@@ -202,11 +217,10 @@ if (goHome) {
                         <View style={styles.passwordbox}>
 
             {/*Password Input Box*/}
-                            <TextInput secureTextEntry={!passwordView} style={styles.inputpassword} placeholderTextColor={'gray'}
+                            <TextInput secureTextEntry={viewPassword==Hide_Pass} style={styles.inputpassword} placeholderTextColor={'gray'}
                                     placeholder={'Input Your Password Here!'}
                                     onChangeText={passwordEntered => setPasswordEntered(passwordEntered)}
                                     defaultValue={passwordEntered}
-                                    ref={input => { pass = input }}
                                     />
 
             {/*Button for viewing password [password_visibility] (has a variable image uri)*/}
@@ -367,7 +381,7 @@ const styles = StyleSheet.create({
         marginVertical:10,
         padding:4,
         borderRadius:4,
-        backgroundColor:'grey',
+        backgroundColor:'black',
         alignItems:'center',
         justifyContent:'center',
         elevation:10,
@@ -413,7 +427,7 @@ const styles = StyleSheet.create({
     footerregion:{
         flex:1/40,
         height:25,
-        backgroundColor:'steelblue',    
+        // backgroundColor:'steelblue',    
     },
 
     //Thumbnail for buttons
